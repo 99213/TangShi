@@ -1,0 +1,20 @@
+<!--pages/zhuce/zhuce.wxml-->
+<view class="title">
+<text>用户注册</text>
+</view>
+<view id="total">
+<form bindsubmit="create_zhuce" >
+<view id="t1">
+<text>手机号</text><input type="text" name="phonenumber" id="use" placeholder="注册您的账号" value="{{phonenumber}}"></input>
+</view>
+<view id="t2">
+<text>密码</text><input type="password" name="password1" id="pass1" placeholder="注册您的密码" value="{{password1}}"></input>
+</view>
+<view id="t3">
+<text>确认密码</text><input type="password" name="password2" id="pass2" placeholder="确认您的密码" value="{{password2}}"></input>
+</view>
+
+<button id="btn1" form-type="submit"><text>注册</text></button>
+</form>
+
+</view>
