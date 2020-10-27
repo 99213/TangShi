@@ -23,10 +23,10 @@ def sign(request):
     try:
         this_user = User.objects.get(PhoneNumber=phonenumber)
     except:
-        return JsonResponse({"status": -1, "msg": "user doesn't exist", "phonenumber":phonenumber})
+        return JsonResponse({"status": -1, "msg": "user doesn't exist", "phonenumber": phonenumber})
     if this_user.Password == password:
         print("2233")
-        return JsonResponse({"status": 1, "msg": "登录成功", "data":"true"})
+        return JsonResponse({"status": 1, "msg": "登录成功", "data": "true"})
     else:
         return JsonResponse({"status": 0, "msg": "登录失败"})
 
@@ -104,7 +104,7 @@ def pay(request):
     JsonResponse({"status": 1, "Two-Dimensional Code": pay(trade_id.Cost)})
 
 
-def pay_to_canteen(money):    #返回固定收款额的食堂收款码
+def pay_to_canteen(money):    # 返回固定收款额的食堂收款码
     return "now wait for this module done"
 
 
