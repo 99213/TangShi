@@ -1,0 +1,43 @@
+<!--pages/zhuye/zhuye.wxml-->
+<view class="content">
+<view class="img">
+<image src="/images/shitang.jpg" style="width:100%;height:230px;"></image>
+</view>
+
+<view class="nav">
+  <view class="nav-item">
+    <view><image src="/images/image-shaguo.jpg" style="width:25px;height:23px;"></image></view>
+    <view id="0">砂锅</view>
+  </view>
+  <view class="nav-item">
+    <view><image src="/images/image-mixian.jpg" style="width:25px;height:23px;"></image></view>
+    <view>米线</view>
+  </view>
+  <view class="nav-item">
+    <view><image src="/images/image-mifan.jpg" style="width:25px;height:23px;"></image></view>
+    <view>米饭</view>
+  </view>
+</view>
+<view class="hr"></view>
+
+  <view class="list">
+    <block wx:for="{{array}}" >
+    <view class="item" bindtap="seeDetaile" >
+      <view>
+        <image src="{{item.img}}" style="width:75px;height:58px;"></image>
+      </view>
+      <view class="desc">
+        <navigator url="/pages/xiangqing/xiangqing">
+        <view class="title">{{item.title}}</view>
+      </navigator>
+      <view class="count">
+        <view>{{item.type}}</view>
+      <view class="liulan">{{item.liulan}}</view>
+      <view class="pinglun">{{item.pinglun}}</view>
+      </view>
+    </view>
+  </view>
+  <view class="hr2"></view>
+  </block>
+</view>
+</view>

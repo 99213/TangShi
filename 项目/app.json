@@ -1,0 +1,54 @@
+{
+  "pages": [
+    
+    "pages/grzx1/grzx1",
+    "pages/zhuye/zhuye",
+    "pages/dingdan/dingdan",
+    "pages/grzx/grzx",
+    "pages/index/index",
+    "pages/logs/logs",
+    "pages/zhuce/zhuce",
+    "pages/yanzhengma/yanzhengma",
+    "pages/xiangqing/xiangqing"
+  ],
+
+  "window": {
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#fff",
+    "navigationBarTitleText": "Weixin",
+    "navigationBarTextStyle": "black"
+  },
+  "style": "v2",
+  "sitemapLocation": "sitemap.json",
+  "tabBar": {
+    "selectedColor": "#D53E37",
+    "backgroundColor": "#f5f5f5",
+    "borderStyle": "white",
+    "list": [
+      {
+        "pagePath": "pages/zhuye/zhuye",
+        "text": "菜品",
+        "iconPath": "images/image-zhuye.jpg",
+        "selectedIconPath": "images/image-zhuye2.jpg"
+      },
+      {
+        "pagePath": "pages/dingdan/dingdan",
+        "text": "订单",
+        "iconPath": "images/image-dingdan.jpg",
+        "selectedIconPath": "images/image-dingdan2.jpg"
+      },
+      {
+        "pagePath": "pages/grzx/grzx",
+        "text": "个人中心",
+        "iconPath": "images/image-me.jpg",
+        "selectedIconPath": "images/image-me2.jpg"
+      },
+      {
+        "pagePath": "pages/grzx1/grzx1",
+        "text": "个人中心1",
+        "iconPath": "images/image-me.jpg",
+        "selectedIconPath": "images/image-me2.jpg"
+      }
+    ]
+  }
+}
