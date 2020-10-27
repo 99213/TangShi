@@ -61,7 +61,7 @@ class Trade(models.Model):
     User = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     Code = models.CharField(max_length=50)
     TStatus = models.BooleanField()
-    OrderTime = models.TimeField()
+    OrderTime = models.TimeField(auto_now_add=True)
     CloseTime = models.TimeField(null=True)
     Cost = models.FloatField(max_length=5)
 
