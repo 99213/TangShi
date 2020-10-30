@@ -1,7 +1,5 @@
 from django.urls import path
-
 from . import views
-
 
 
 app_name = 'trytest'
@@ -12,5 +10,6 @@ urlpatterns = [
     path(r'register/', views.views.register, name='register'),
     path(r'order/', views.order.order, name='order'),
     path(r'pay/', views.order.pay, name='pay'),
+    path(r'new_proposal/', views.proposal.new_proposal, name='new_proposal'),
     path(r'get_order_status/', views.order.get_order_status, name='get_order_status')
 ]

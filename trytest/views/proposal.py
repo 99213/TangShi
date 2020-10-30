@@ -4,6 +4,7 @@ from trytest.models import User, Dishes, Trade, TradeDish, DishesImage, Proposal
 from ..tools import *
 import time, random
 
+
 def new_proposal(request):
     data_get = request.POST
     images = request.FILES.getlist('images')
