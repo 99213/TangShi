@@ -83,9 +83,9 @@ Page({
     })
     
   },
-  goto_index: function (res) {
+  getResult: function (res) {
     console.log(res.data);
-    if(res.data == "true"){
+    if(res.data['status'] == 1){
     wx.showToast({
       title: "登录成功",
       duration: 2000

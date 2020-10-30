@@ -1,6 +1,10 @@
 from django.db import models
 import datetime
+import time
+import random
 from django.utils import timezone
+from django.shortcuts import render
+from tangshi.settings import *
 
 
 class Question(models.Model):
@@ -30,30 +34,42 @@ class Canteen(models.Model):
 
 
 class User(models.Model):
-    UserName = models.CharField(max_length=10, null=True)
+    UserName = models.CharField(max_length=10, default=0)
     Password = models.CharField(max_length=20)
-    PhoneNumber = models.IntegerField()
-    StudentNumber = models.IntegerField()
-    Money = models.IntegerField(default=0)
+    PhoneNumber = models.FloatField(max_length=20)
+    StudentNumber = models.IntegerField(null=True)
+    Money = models.IntegerField(default=0, null=True)
 
 
 class Proposal(models.Model):
     User = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
-    Picture = models.ImageField(null=True)
     Introduction = models.CharField(max_length=200)
     PName = models.CharField(max_length=20)
     Support = models.IntegerField(null=True)
     PStatus = models.BooleanField()
-# Create your models here.
+
+
+def load_proposal_image(instance, filename):
+    return '/'.join([MEDIA_ROOT, instance.Proposal_id, time.strftime('%Y%m%d%H%M%S')
+                     + random.randint(1000000, 9999999).__str__()])
+
+
+class ProposalImage(models.Model):
+    Proposal = models.ForeignKey(Proposal, on_delete=models.CASCADE)
+    Picture = models.ImageField(null=True, upload_to=load_proposal_image, blank=True)
 
 
 class Dishes(models.Model):
     DishName = models.CharField(max_length=10)
     DishBrief = models.CharField(max_length=200, null=True)
-    DishPic = models.ImageField(null=True)
     DishScore = models.IntegerField(null=True)
     DishPrice = models.FloatField(max_length=5)
     DishSell = models.IntegerField(default=0, null=True)
+
+
+class DishesImage(models.Model):
+    Dishes = models.ForeignKey(Dishes, on_delete=models.CASCADE)
+    DishPic = models.ImageField(null=True, upload_to='picture',)
 
 
 class Trade(models.Model):
@@ -76,3 +92,4 @@ class TradeDish(models.Model):
     Dishes = models.ForeignKey(Dishes, on_delete=models.CASCADE, null=True)
     Trade = models.ForeignKey(Trade, on_delete=models.CASCADE, null=True)
     CommentScore = models.IntegerField(null=True)
+

@@ -17,16 +17,7 @@ Page({
 
     
   },
-  create_login: function (e) {
-    console.log(e.detail.value)
-    wx.request({
-      url: "http://127.0.0.1:8000/trytest/sign/?" + "password=" + e.detail.value["password"] + "&phonenumber=" + e.detail.value["phonenumber"],
-      //url地址为后端代码的位置需修改
-      data: e.detail.value,
-      success: this.getResult.bind(this)
-    })
-    
-  },
+  
   // 收藏
   addLike() {
     this.setData({

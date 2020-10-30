@@ -1,0 +1,8 @@
+新建提案：
+需要从小程序端获取的信息：Introduction, PName, User_id，image
+Support新建时为0
+PStatus新建时为“打开”
+由此生成一条proposal数据表对象
+获取对象id
+！！把所有image的url存入新建的propsalimage时间表对象
+返回新建成功

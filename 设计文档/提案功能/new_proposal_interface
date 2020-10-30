@@ -1,0 +1,11 @@
+调用new_proposal方法能新建提案
+request请求应该包含字段有以下：
+user_id
+pname
+introduction
+images
+其中：
+user_id为用户id，以数值类型上传
+pname为提案名
+introduction为提案介绍
+images存储所有图片

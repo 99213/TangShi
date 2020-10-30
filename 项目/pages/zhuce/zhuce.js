@@ -75,7 +75,7 @@ Page({
   create_zhuce: function (e) {
     console.log(e.detail.value)
     wx.request({
-      url: "http://localhost:8080/WEB18/registerdemo?username=" + e.detail.value["phonenumber"] + "&password1=" + e.detail.value["password1"] + "&password2=" + e.detail.value["password2"] +"&phone=" + e.detail.value["phone"],
+      url: "http://localhost:8000/trytest/register?" + "&password=" + e.detail.value["password1"] ,
       data: e.detail.value,
       success: this.getResult.bind(this)
     })
