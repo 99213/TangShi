@@ -17,3 +17,5 @@ def new_proposal(request):
         image_obj.save()
     the_proposal.save()
     return JsonResponse({"Status": 1, "msg": "发表提案成功"})
+
+
