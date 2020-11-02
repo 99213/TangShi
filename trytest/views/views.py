@@ -2,7 +2,7 @@
 from django.shortcuts import render
 from django.http import JsonResponse
 from django.http import HttpResponse
-from trytest.models import User, Dishes, Trade, TradeDish, DishesImage, ProposalImage
+from trytest.models import User, Dishes, FavoriteDish
 import random
 import re
 
@@ -76,5 +76,21 @@ def register(request):
         else:
             return JsonResponse({"status": -1, "msg": "not a phone number"})
 
+
+def add_love_dish(request):
+    if request.method == "POST":
+        data_get = request.POST
+    elif request.method == "GET":
+        data_get = request.GET
+    else:
+        return JsonResponse({"success": 0, "msg": "request error"})
+
+    user_id = int(data_get.get("user_id"))
+    dishes_id = int(data_get.get("dishes_id"))
+    if FavoriteDish.objects.filter(User_id=user_id, Dishes_id=dishes_id):
+        return JsonResponse({"status": 0, "msg": "菜品早已设置为收藏"})
+    else:
+        FavoriteDish(User_id=user_id, Dishes_id=dishes_id).save()
+        return JsonResponse({"status": 1, "状态": "添加成功"})
 # except:
 # return JsonResponse({"status": -1, "msg": "后端错误"})

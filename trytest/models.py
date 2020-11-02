@@ -33,12 +33,30 @@ class Canteen(models.Model):
     Cname = models.CharField(max_length=20)
 
 
+class Dishes(models.Model):
+    DishName = models.CharField(max_length=10)
+    DishBrief = models.CharField(max_length=200, null=True)
+    DishScore = models.IntegerField(null=True)
+    DishPrice = models.FloatField(max_length=5)
+    DishSell = models.IntegerField(default=0, null=True)
+
+
+class DishesImage(models.Model):
+    Dishes = models.ForeignKey(Dishes, on_delete=models.CASCADE)
+    DishPic = models.ImageField(null=True, upload_to='picture',)
+
+
 class User(models.Model):
     UserName = models.CharField(max_length=10, default=0)
     Password = models.CharField(max_length=20)
     PhoneNumber = models.FloatField(max_length=20)
     StudentNumber = models.IntegerField(null=True)
     Money = models.IntegerField(default=0, null=True)
+
+
+class FavoriteDish(models.Model):
+    Dishes = models.ForeignKey(Dishes, on_delete=models.CASCADE)
+    User = models.ForeignKey(User, on_delete=models.CASCADE)
 
 
 class Proposal(models.Model):
@@ -57,19 +75,6 @@ def load_proposal_image(instance, filename):
 class ProposalImage(models.Model):
     Proposal = models.ForeignKey(Proposal, on_delete=models.CASCADE)
     Picture = models.ImageField(null=True, upload_to=load_proposal_image, blank=True)
-
-
-class Dishes(models.Model):
-    DishName = models.CharField(max_length=10)
-    DishBrief = models.CharField(max_length=200, null=True)
-    DishScore = models.IntegerField(null=True)
-    DishPrice = models.FloatField(max_length=5)
-    DishSell = models.IntegerField(default=0, null=True)
-
-
-class DishesImage(models.Model):
-    Dishes = models.ForeignKey(Dishes, on_delete=models.CASCADE)
-    DishPic = models.ImageField(null=True, upload_to='picture',)
 
 
 class Trade(models.Model):
