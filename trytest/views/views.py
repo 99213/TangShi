@@ -6,6 +6,7 @@ from trytest.models import User, Dishes, Trade, TradeDish, DishesImage, Proposal
 import random
 import re
 
+
 def index(request):
     return HttpResponse("Hello, world. You're at the polls index.")
 
@@ -63,19 +64,17 @@ def register(request):
         """a=0
         if type(phonenumber) is str:
             a=1"""
-        ret = re.match(r"^1[35678]\d{9}", phonenumber)
+        ret = re.match(r"^1[35678]\d{9}$", phonenumber)
         if ret:
             try:
                 this_user.save()
             except:
                 if type(phonenumber) is str:
                     return JsonResponse({"status": -1, "msg": "错误2"})
-                return JsonResponse({"status": -1, "msg": "错误1"+this_user.PhoneNumber})
+                return JsonResponse({"status": -1, "msg": "错误1" + this_user.PhoneNumber})
             return JsonResponse({"status": 1, "msg": "register succeed"})
         else:
             return JsonResponse({"status": -1, "msg": "not a phone number"})
 
-  # except:
- # return JsonResponse({"status": -1, "msg": "后端错误"})
-
-
+# except:
+# return JsonResponse({"status": -1, "msg": "后端错误"})

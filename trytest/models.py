@@ -1,8 +1,8 @@
 from django.db import models
-import datetime
 import time
 import random
 from django.utils import timezone
+import datetime
 from django.shortcuts import render
 from tangshi.settings import *
 
@@ -78,7 +78,7 @@ class Trade(models.Model):
     Code = models.CharField(max_length=50)
     TStatus = models.BooleanField()
     OrderTime = models.TimeField(auto_now_add=True)
-    CloseTime = models.TimeField(null=True)
+    CloseTime = models.TimeField(null=True,)
     Cost = models.FloatField(max_length=5)
 
 
