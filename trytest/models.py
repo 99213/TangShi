@@ -46,7 +46,13 @@ class DishesImage(models.Model):
     DishPic = models.ImageField(null=True, upload_to='picture',)
 
 
+def load_user_image(instance, filename):
+    return '/'.join([MEDIA_ROOT, "user_image", instance.id, time.strftime('%Y%m%d%H%M%S')
+                     + random.randint(1000000, 9999999).__str__()])
+
+
 class User(models.Model):
+    UserImage = models.ImageField(null=True, upload_to=load_user_image)
     UserName = models.CharField(max_length=10, default=0)
     Password = models.CharField(max_length=20)
     PhoneNumber = models.FloatField(max_length=20)
@@ -68,7 +74,7 @@ class Proposal(models.Model):
 
 
 def load_proposal_image(instance, filename):
-    return '/'.join([MEDIA_ROOT, instance.Proposal_id, time.strftime('%Y%m%d%H%M%S')
+    return '/'.join([MEDIA_ROOT, "proposal_images", instance.Proposal_id, time.strftime('%Y%m%d%H%M%S')
                      + random.randint(1000000, 9999999).__str__()])
 
 

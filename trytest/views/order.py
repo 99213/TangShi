@@ -103,5 +103,6 @@ def undo_order(request):
     this_trade.save()
     return JsonResponse({"status": 1, "msg": "取消成功，若您已付款，退款将很快返回您的付款账户"})
 
+
 def refund(trade_id):
     test = "test"
