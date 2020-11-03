@@ -83,6 +83,10 @@ class ProposalImage(models.Model):
     Picture = models.ImageField(null=True, upload_to=load_proposal_image, blank=True)
 
 
+class ProposalUserLike(models.Model):
+    Data = models.CharField(max_length=40, primary_key=True)
+
+
 class Trade(models.Model):
     Canteen = models.ForeignKey(Canteen, on_delete=models.CASCADE)
     User = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
