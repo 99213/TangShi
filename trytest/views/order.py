@@ -106,3 +106,36 @@ def undo_order(request):
 
 def refund(trade_id):
     test = "test"
+
+
+def name_search_dish(request):
+    if request.method == "POST":
+        data_get = request.POST
+    elif request.method == "GET":
+        data_get = request.GET
+    else:
+        return JsonResponse({"success": 0, "msg": "request type error"})
+    dish_name = data_get.get("dish_name")
+    may_dishes = Dishes.objects.filter(DishName__contains=dish_name)
+    dishes_dic = {}
+    for dish in may_dishes:
+        dishes_dic[dish.id] = id_get_dish_dic(dish.id)
+    return JsonResponse({"status": 1, "content": dishes_dic})
+
+
+def id_search_dish(request):
+    if request.method == "POST":
+        data_get = request.POST
+    elif request.method == "GET":
+        data_get = request.GET
+    else:
+        return JsonResponse({"success": 0, "msg": "request type error"})
+    dish_dic = id_get_dish_dic(data_get.get("dish_id"))
+    return JsonResponse({"status": 1, "content": dish_dic})
+
+
+def id_get_dish_dic(dish_id):
+    dish = Dishes.objects.get(id=dish_id)
+    dish_dic = {"dish_id": dish_id, "dish_name": dish.DishName, "dish_brief": dish.DishBrief,
+                "dish_score": dish.DishScore, "dish_price": dish.DishPrice, "dish_sell": dish.DishSell}
+    return dish_dic
