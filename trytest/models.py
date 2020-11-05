@@ -5,6 +5,7 @@ from django.utils import timezone
 import datetime
 from django.shortcuts import render
 from tangshi.settings import *
+import PIL
 
 
 class Question(models.Model):
@@ -41,9 +42,14 @@ class Dishes(models.Model):
     DishSell = models.IntegerField(default=0, null=True)
 
 
+def load_dishes_image(instance, filename):
+    return '/'.join([MEDIA_ROOT, "dish_image", instance.id, time.strftime('%Y%m%d%H%M%S')
+                     + random.randint(1000000, 9999999).__str__()])
+
+
 class DishesImage(models.Model):
     Dishes = models.ForeignKey(Dishes, on_delete=models.CASCADE)
-    DishPic = models.ImageField(null=True, upload_to='picture',)
+    DishPic = models.ImageField(null=True, upload_to=load_dishes_image,)
 
 
 def load_user_image(instance, filename):
@@ -70,12 +76,12 @@ class Proposal(models.Model):
     Introduction = models.CharField(max_length=200)
     PName = models.CharField(max_length=20)
     Support = models.IntegerField(null=True)
-    PStatus = models.BooleanField()
+    PStatus = models.CharField(max_length=10)
 
 
 def load_proposal_image(instance, filename):
-    return '/'.join([MEDIA_ROOT, "proposal_images", instance.Proposal_id, time.strftime('%Y%m%d%H%M%S')
-                     + random.randint(1000000, 9999999).__str__()])
+    return '/'.join([MEDIA_ROOT, "proposal_images", instance.Proposal_id.__str__(), time.strftime('%Y%m%d%H%M%S')
+                     + str(random.randint(1000000, 9999999))])
 
 
 class ProposalImage(models.Model):
@@ -89,9 +95,9 @@ class ProposalUserLike(models.Model):
 
 class Trade(models.Model):
     Canteen = models.ForeignKey(Canteen, on_delete=models.CASCADE)
-    User = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+    User = models.ForeignKey(User, on_delete=models.CASCADE)
     Code = models.CharField(max_length=50)
-    TStatus = models.BooleanField()
+    TStatus = models.CharField(max_length=10)
     OrderTime = models.TimeField(auto_now_add=True)
     CloseTime = models.TimeField(null=True,)
     Cost = models.FloatField(max_length=5)

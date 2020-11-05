@@ -3,8 +3,10 @@ from django.shortcuts import render
 from django.http import JsonResponse
 from django.http import HttpResponse
 from trytest.models import User, Dishes, FavoriteDish
+import trytest.tools
 import random
 import re
+import json
 
 
 def index(request):
@@ -28,6 +30,8 @@ def sign(request):
         return JsonResponse({"status": -1, "msg": "user doesn't exist", "phonenumber": phonenumber})
     if this_user.Password == password:
         print("2233")
+        request.session['is_login'] = True
+        request.session['user_id'] = this_user.id
         return JsonResponse({"status": 1, "msg": "登录成功", "data": "true"})
     else:
         return JsonResponse({"status": 0, "msg": "登录失败"})
@@ -35,7 +39,7 @@ def sign(request):
 
 def register(request):
     if request.method == "POST":
-        data_get = request.POST
+        data_get = json.loads(request.body)
     elif request.method == "GET":
         data_get = request.GET
     else:
@@ -78,14 +82,17 @@ def register(request):
 
 
 def add_love_dish(request):
+    if not request.session.get('is_login', False):
+        return JsonResponse({"status": -2, "msg": "please sign in first"})
+    user_id = request.session["user_id"]
+
     if request.method == "POST":
-        data_get = request.POST
+        data_get = json.loads(request.body)
     elif request.method == "GET":
         data_get = request.GET
     else:
         return JsonResponse({"success": 0, "msg": "request error"})
 
-    user_id = int(data_get.get("user_id"))
     dishes_id = int(data_get.get("dishes_id"))
     if FavoriteDish.objects.filter(User_id=user_id, Dishes_id=dishes_id):
         return JsonResponse({"status": 0, "msg": "菜品早已设置为收藏"})
@@ -95,13 +102,17 @@ def add_love_dish(request):
 
 
 def add_user_image(request):
+    if not request.session.get('is_login', False):
+        return JsonResponse({"status": -2, "msg": "please sign in first"})
+    user_id = request.session["user_id"]
+
     if request.method == "POST":
-        data_get = request.POST
+        data_get = json.loads(request.body)
     elif request.method == "GET":
         data_get = request.GET
     else:
         return JsonResponse({"success": 0, "msg": "request error"})
-    user_id = int(data_get.get("user_id"))
+
     this_user = User.objects.get(id=user_id)
     for filename, file in request.FILES.iteritems():
         name = request.FILES[filename].name

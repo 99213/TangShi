@@ -1,2 +1,3 @@
-def changeImageName(instance, filename):
-    a=1
+from django.http import JsonResponse
+
+
