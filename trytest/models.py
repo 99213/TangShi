@@ -6,6 +6,7 @@ import datetime
 from django.shortcuts import render
 from tangshi.settings import *
 import PIL
+from trytest.tools import *
 
 
 class Question(models.Model):
@@ -81,7 +82,7 @@ class Proposal(models.Model):
 
 def load_proposal_image(instance, filename):
     return '/'.join([MEDIA_ROOT, "proposal_images", instance.Proposal_id.__str__(), time.strftime('%Y%m%d%H%M%S')
-                     + str(random.randint(1000000, 9999999))])
+                     + str(random.randint(1000000, 9999999)) + file_type(filename)])
 
 
 class ProposalImage(models.Model):

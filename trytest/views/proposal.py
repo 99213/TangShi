@@ -15,7 +15,6 @@ def new_proposal(request):
 
     data_get = request.POST
     images = request.FILES.getlist('images')
-
     introduction = data_get.get('introduction')
     pname = data_get.get('pname')
     the_proposal = Proposal(Introduction=introduction, PName=pname, User_id=int(user_id), Support=0, PStatus="打开")
