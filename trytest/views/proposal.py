@@ -5,6 +5,7 @@ from ..tools import *
 import time, random
 import trytest.tools
 import json
+import re
 
 
 def new_proposal(request):
@@ -29,7 +30,7 @@ def new_proposal(request):
         except Exception as e:
             return JsonResponse({"Status": -1, "msg": e.__str__(),
                                  "t": image_obj.__str__(), "a": image.__str__()})
-    return JsonResponse({"Status": 1, "msg": "发表提案成功", "name": image.__str__()})
+    return JsonResponse({"Status": 1, "msg": "发表提案成功", "name": image_road(ProposalImage.objects.filter(Proposal_id=the_proposal.id)[0].Picture.__str__())})
 
 
 def likes_change(request):
