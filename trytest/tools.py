@@ -8,9 +8,5 @@ def image_road(abs_road):
 
 
 def file_type(file_name):
-    a = re.findall(r"\..*\.", file_name)
-
-    fileType = re.findall(r"\..*", file_name)[0]
-    if len(a) > 0:
-        fileType = fileType.replace(a[0], '.')
+    fileType = file_name.replace(re.findall(r".*\.", file_name)[0], '.')[0]
     return fileType

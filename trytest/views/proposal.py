@@ -55,3 +55,18 @@ def likes_change(request):
     tmp.save()
     JsonResponse({"status": 1, "msg": "change succeed"})
 
+
+def delete_proposal(request):  # 不提供订单id则默认删除全部user订单
+    if request.method == "POST":
+        data_get = request.POST
+    elif request.method == "GET":
+        data_get = request.GET
+    else:
+        return JsonResponse({"success": 0, "msg": "request error"})
+    proposal_id = int(data_get.get("proposal_id", -1))
+    if proposal_id == -1:
+        Proposal.objects.filter(User_id=request.session["user_id"]).delete()
+        return JsonResponse({"success": 1, "msg": "DELETE ALL YOUR PROPOSAL"})
+    else:
+        Proposal.objects.filter(id=proposal_id).delete()
+    return JsonResponse({"success": 1, "msg": "DELETE THIS PROPOSAL"})

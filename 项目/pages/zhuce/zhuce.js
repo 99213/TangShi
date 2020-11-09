@@ -82,14 +82,15 @@ Page({
 
   },
   getResult: function (res) {
-    console.log(res.data);
-    if (res.data == "true") {
+    console.log(res.data)
+    if (res.data["status"] == 1) {
       wx.showToast({
         title: "注册成功",
         duration: 2000
       })
+      console.log(res.data)
       wx.switchTab({
-        url: '../login/login',
+        url: '../grzx1/grzx1',
       })
       setTimeout(function () {
         wx.navigateBack({

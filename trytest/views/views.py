@@ -119,5 +119,16 @@ def add_user_image(request):
         this_user.UserImage = file
         this_user.save()
     return JsonResponse({"status": 1, "msg": "头像上传成功"})
+
+
+def get_tangshi_name(request):
+    if request.method == "POST":
+        data_get = json.POST
+    elif request.method == "GET":
+        data_get = request.GET
+    else:
+        return JsonResponse({"success": 0, "msg": "request error"})
+
+    return JsonResponse({"status": 1, "mallName": "堂食"})
 # except:
 # return JsonResponse({"status": -1, "msg": "后端错误"})

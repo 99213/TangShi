@@ -73,7 +73,7 @@ class FavoriteDish(models.Model):
 
 
 class Proposal(models.Model):
-    User = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+    User = models.ForeignKey(User, on_delete=models.CASCADE)
     Introduction = models.CharField(max_length=200)
     PName = models.CharField(max_length=20)
     Support = models.IntegerField(null=True)

@@ -167,8 +167,17 @@ def id_search_dish(request):
         data_get = request.GET
     else:
         return JsonResponse({"success": 0, "msg": "request type error"})
-    dish_dic = id_get_dish_dic(data_get.get("dish_id"))
+    dish_dic = id_get_dish_dic(int(data_get.get("dish_id")))
     return JsonResponse({"status": 1, "content": dish_dic})
+
+
+def get_all_dish(request):
+    dishes_list = []
+    dishes_obj = Dishes.objects.filter()
+    for dish_obj in dishes_obj:
+        dish_dic = id_get_dish_dic(dish_obj.id)
+        dishes_list.append(dish_dic)
+    return JsonResponse({"status": 1, "dishes_list": dishes_list})
 
 
 def id_get_dish_dic(dish_id):
@@ -180,5 +189,5 @@ def id_get_dish_dic(dish_id):
         dish_img_list.append(head_path + img.DishPic.name)
     dish_dic = {"dish_id": dish_id, "dish_name": dish.DishName, "dish_brief": dish.DishBrief,
                 "dish_score": dish.DishScore, "dish_price": dish.DishPrice, "dish_sell": dish.DishSell,
-                "img_list": img_list}
+                "img_list": dish_img_list}
     return dish_dic
