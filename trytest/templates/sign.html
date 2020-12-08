@@ -1,0 +1,99 @@
+
+      {% extends "nav.html" %}
+
+      {% block content %}
+      <script>
+            $("body").css("background-image","url('/media/background/girl.gif')");
+      </script>
+      <div class="container-fluid">
+        <div>
+<!--        <form action="http://127.0.0.1:8000/trytest/worker_sign/" method="post">-->
+          <div class="row">
+            <div class="col-md-4"></div>
+            <div class="col-md-4">
+              <div class="form-group">
+                <label for="phonenumber">
+                  手机号
+                  <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>
+                </label>
+                <input type="number" name="phonenumber" class="form-control" id="phonenumber" placeholder="号码">
+              </div>
+            </div>
+            <div class="col-md-4"></div>
+          </div>
+          <div class="row">
+            <div class="col-md-4"></div>
+            <div class="col-md-4">
+              <div class="form-group">
+                <label for="password">
+                  密码
+                  <span class="glyphicon glyphicon-eye-close" aria-hidden="true"></span>
+                </label>
+                <input type="password" name="password" class="form-control" id="password" placeholder="Password">
+              </div>
+            </div>
+            <div class="col-md-4"></div>
+          </div>
+          <div class="row">
+            <div class="col-md-4"></div>
+            <div class="col-md-4">
+              <button onclick="sign()" class="btn btn-default">
+                <span class="glyphicon glyphicon-apple" aria-hidden="true"></span>
+                登录
+              </button>
+            </div>
+            <div class="col-md-4"></div>
+          </div>
+      </div>
+
+      </div>
+
+      <div class="row">
+        <div class="col-md-4"></div>
+        <div class="col-md-4" id="err" ><div style="color:red;">err</div></div>
+        <script>
+          $("#err").hide();
+        </script>
+        <div class="col-md-4"></div>
+      </div>
+
+
+      <script xmlns:diaplay="http://www.w3.org/1999/xhtml">
+        function sign()
+        {
+          var form = new FormData();
+          form.append("password", Number($('#password').val()));
+          form.append("phonenumber", Number($('#phonenumber').val()));
+          form.append("t", 1);
+
+          var settings = {
+            "url": "http://127.0.0.1:8000/trytest/worker_sign/",
+            "method": "POST",
+            "timeout": 0,
+            "processData": false,
+            "mimeType": "multipart/form-data",
+            "contentType": false,
+            "data": form
+          };
+
+          $.ajax(settings).done(function (response) {
+            console.log(response);
+            var a = $.parseJSON(response);
+            if (a.code == -1){
+              $("#err").text(a.err);
+              $("#err").show();
+              setTimeout(hide,2000);
+            }
+            else{
+              $(location).attr('href', 'http://127.0.0.1:8000/trytest/worker_home/');
+            }
+          });
+        }
+        function hide()
+        {
+          $("#err").hide();
+        }
+      </script>>
+      {% endblock %}
+
+

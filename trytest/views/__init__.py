@@ -1,1 +1,1 @@
-from . import views, proposal, order
+from . import views, proposal, order, canteen, talkRoom

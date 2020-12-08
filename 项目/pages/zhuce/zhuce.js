@@ -99,9 +99,9 @@ Page({
       }, 2000)
     }
 
-    if (res.data == "-1") {
+    if (res.data["status"] == "-1") {
       wx.showToast({
-        title: "用户名已存在",
+        title: res.data["msg"],
         icon: 'none',
         duration: 2000
       })

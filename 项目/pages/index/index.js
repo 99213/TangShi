@@ -100,7 +100,7 @@ Page({
     }, 1000)
   }
   
-  if(res.data == "false"){
+  if(res.data['status'] == 0 ){
     wx.showToast({
       title: "账号或密码不对",
       icon: 'none',

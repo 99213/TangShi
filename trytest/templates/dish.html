@@ -1,0 +1,333 @@
+
+      {% extends "nav.html" %}
+
+      {% block content %}
+        <script>
+            $("body").css("background-image","url('/media/background/sky.jpg')");
+        </script>
+        <div class="row" style="font-family:微软雅黑;color: #532411">
+          <div class="col-md-1"></div>
+          <div class="col-md-4">
+              <h1 align="center" style="font-family:隶书">查看菜品信息</h1>
+              <div style="height:636px;width:90%; margin: 0 auto" align="center">
+              <ul class="list-group" style=" overflow-y:auto; overflow-x:auto; width:100%; height:600px; margin: 0 auto" id="展示栏">
+              </ul>
+              </div>
+              <script>
+                var form = new FormData();
+                var settings = {
+                  "url": "http://127.0.0.1:8000/trytest/get_all_dish/",
+                  "method": "POST",
+                  "timeout": 0,
+                  "processData": false,
+                  "mimeType": "multipart/form-data",
+                  "contentType": false,
+                  "data": form
+                };
+                dish_img_to_id={}
+                $.ajax(settings).done(function (response) {
+                  console.log(response);
+                  var dishes_arr = $.parseJSON(response).data;
+                  console.log(dishes_arr);
+                  var dish_num = dishes_arr.length;
+                  var handle_list = $("#展示栏");
+
+                  for(var index = 0; index < dish_num; index++){
+                    var handle_dish = dishes_arr[index];
+                    var dish_id = handle_dish.dish_id;
+                    var dish_name= handle_dish.dish_name;
+                    var dish_brief = handle_dish.dish_brief;
+                    var dish_score = handle_dish.dish_score;
+                    var dish_price = handle_dish.dish_price;
+                    var dish_sell= handle_dish.dish_sell;
+                    var img_list= handle_dish.img_list;
+                    var img_id_list= handle_dish.img_id_list;
+                    var dish_table = $("<table class='table'></table>").text("");
+
+                    var id_th = $("<th></th>").text("id");
+                    var name_th = $("<th></th>").text("菜名");
+                    var brief_th = $("<th></th>").text("简介");
+                    var score_th = $("<th></th>").text("分数");
+                    var price_th = $("<th></th>").text("单价");
+                    var sell_th = $("<th></th>").text("总销量");
+                    var first_tr = $("<tr></tr>").text("");
+                    var thread = $("<thead></thead>").text("");
+                    first_tr.append(id_th, name_th, brief_th, score_th, price_th, sell_th);
+                    thread.append(first_tr);
+                    dish_table.append(thread);
+
+                    var id_th2 = $("<td></td>").text(dish_id);
+                    var name_th2 = $("<td></td>").text('');
+                    var name_txt = $("<textarea cols='5' rows='2' readonly='true'></textarea>").text(dish_name);
+                    name_th2.append(name_txt);
+
+                    var brief_th2 = $("<td></td>").text('');
+
+                    var brief_txt = $("<textarea cols='6' rows='5' readonly='true'></textarea>").text(dish_brief);
+                    brief_th2.append(brief_txt);
+
+                    var score_th2 = $("<td></td>").text(dish_score);
+                    var price_th2 = $("<td></td>").text(dish_price);
+                    var sell_th2 = $("<td></td>").text(dish_sell);
+                    var second_tr = $("<tr></tr>").text("");
+                    second_tr.append(id_th2, name_th2, brief_th2, score_th2, price_th2, sell_th2);
+                    var tbody = $("<tbody></tbody>").text("");
+                    tbody.append(second_tr);
+                    dish_table.append(tbody);
+
+                    handle_list.append(dish_table)
+                    var tmp_img_to_id = {}
+                    for(var img_index = 0; img_index < img_list.length; img_index++){
+                        var img = $("<img src='"+img_list[img_index]+"' class='img-responsive img-thumbnail' alt='Responsive image' style='width:45%'></img>").text(String(img_index+1));
+                        tmp_img_to_id[(img_index+1)]= img_id_list[img_index];
+                        var badge = $("<span class='badge' style='width:5%'></span>").text(String(img_index+1));
+                        handle_list.append(badge);
+                        handle_list.append(img);
+                    }
+                    dish_img_to_id[dish_id]=tmp_img_to_id
+
+                  }
+                });
+              </script>
+          </div>
+          <div class="col-md-1"></div>
+          <div class="col-md-4">
+              <h1 align="center" style="font-family:隶书">修改菜品信息</h1>
+              <div style="width: 80%;margin: 0 auto;width:90%">
+                  <p class="help-block">未输入的部分保持不变</p>
+                  <div class="form-group">
+                    <label for="modify_dish_name">原菜品名(原菜品名和id至少输入一项，输入部分菜名即可识别)</label>
+                    <input type="text" class="form-control" id="modify_dish_name" placeholder="请输入原菜品名">
+                  </div>
+                  <div class="form-group">
+                    <label for="modify_dish_name1">新菜名</label>
+                    <input type="text" class="form-control" id="modify_dish_name1" placeholder="请输入新菜品名">
+                  </div>
+                  <div class="form-group">
+                    <label for="modify_dish_id">菜品id(若输入id则必须输对)</label>
+                    <input type="number" class="form-control" id="modify_dish_id" placeholder="id">
+                  </div>
+                  <div class="form-group">
+                    <label for="modify_dish_brief">新简介</label>
+                    <input type="text" class="form-control" id="modify_dish_brief" placeholder="请输入新简介">
+                  </div>
+                  <div class="form-group">
+                    <label for="modify_dish_price">新单价（若称重菜 则单位为元/斤）</label>
+                    <input type="number" class="form-control" id="modify_dish_price" placeholder="单价">
+                  </div>
+                  <div class="form-group">
+                    <label for="modify_dish_img">选择删除第几张图片（删多张图片，数字间请用英文逗号隔开）</label>
+                    <input type="text" class="form-control" id="modify_dish_img" placeholder="例如1,2,3">
+                  </div>
+                  <div class="form-group">
+                    <label for="add_dish_img">新增图片（一次最多三张）</label>
+                    <input type="file" id="add_dish_img">
+                  </div>
+                  <div class="form-group">
+                    <label for="add_dish_img1">新增图片（一次最多三张）</label>
+                    <input type="file" id="add_dish_img1">
+                  </div>
+                  <div class="form-group">
+                    <label for="add_dish_img2">新增图片（一次最多三张）</label>
+                    <input type="file" id="add_dish_img2">
+                  </div>
+                  <select name="" id="modify_dish_category">
+                    <option value="1">家常菜</option>
+                    <option value="2">小吃</option>
+                    <option value="3">凉菜</option>
+                  </select>
+                  <button type="submit" class="btn btn-primary btn-lg active" id="modify_dish_button" style="transform:scale(0.6,0.6)"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span>提交</button>
+              </div>
+          </div>
+          <script>
+              var old_name = $("#test")
+              $("#modify_dish_button").click(function(){
+                var form = new FormData();
+                form.append("index_to_img_id", JSON.stringify(dish_img_to_id));
+                form.append("all_img_index", $("#modify_dish_img").val());
+                var tmpp2b = $("#modify_dish_img").val();
+                form.append("new_name", $("#modify_dish_name1").val());
+                form.append("old_name", $("#modify_dish_name").val());
+                form.append("new_price", $("#modify_dish_price").val());
+                form.append("new_brief", $("#modify_dish_brief").val());
+                form.append("id", $("#modify_dish_id").val());
+                form.append("new_imgs",  $("#add_dish_img")[0].files[0]);
+                form.append("new_imgs",  $("#add_dish_img1")[0].files[0]);
+                form.append("new_imgs",  $("#add_dish_img2")[0].files[0]);
+                form.append("new_category", $("#modify_dish_category").val());
+
+                var settings = {
+                  "url": "http://127.0.0.1:8000/trytest/dish_modify/",
+                  "method": "POST",
+                  "timeout": 0,
+                  "processData": false,
+                  "mimeType": "multipart/form-data",
+                  "contentType": false,
+                  "data": form
+                };
+
+                $.ajax(settings).done(function (response) {
+                  console.log(response);
+                  var back = $.parseJSON(response);
+                  if(back.code == -1){
+                    if(back.message == '0 result'){
+                        alert("id错误或名字查不到此菜。");
+                    }
+                    else if(back.message == 'too many result'){
+                        var may_dishes = Object.keys(back.may_dishes);
+                        var err_log_too_many_dishes = '';
+                        for(var may_dishes_index = 0; may_dishes_index < may_dishes.length; may_dishes_index++){
+                            err_log_too_many_dishes += ('  '+may_dishes[may_dishes_index]);
+                        }
+                        alert('有多于一个可能的菜品:' + err_log_too_many_dishes + '，请输入更详细的名字');
+                    }
+                    else if(back.message == '无此图')
+                    {
+                        alert('此菜不存在这张图');
+                    }
+                  }
+                  else{
+                    alert("修改成功。");
+                    $(location).attr('href', 'http://127.0.0.1:8000/trytest/dish_page/');
+                  }
+                });
+              });
+          </script>
+        </div>
+        <div class="row" style="font-family:微软雅黑;color: #532411">
+          <div class="col-md-1"></div>
+          <div class="col-md-4">
+              <h1 align="center" style="font-family:隶书">删除菜品</h1>
+              <div class="" style="margin: 0 auto; width:90%">
+                  <p>id</p>
+                  <input type="number" id="delete_id" class="form-control" placeholder="请输入id，id和姓名二选一即可">
+                  <p>菜名</p>
+                  <input type="text" id="delete_name" class="form-control" placeholder="请输入菜名">
+                  <button type="button" class="btn btn-primary btn-lg active" id="delete_button" style="transform:scale(0.6,0.6)">
+                  <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>确定
+                  </button>
+              </div>
+          </div>
+          <div class="col-md-1"></div>
+          <div class="col-md-4">
+              <h1 align="center" style="font-family:隶书">新增菜品</h1>
+              <div style="width: 80%;margin: 0 auto">
+                  <p class="help-block">带*为必填</p>
+                  <div class="form-group">
+                    <label for="new_dish_name">菜品名*</label>
+                    <input type="text" class="form-control" id="new_dish_name" placeholder="请输入菜品名">
+                  </div>
+                  <div class="form-group">
+                    <label for="new_dish_brief">简介*</label>
+                    <input type="text" class="form-control" id="new_dish_brief" placeholder="请输入简介">
+                  </div>
+                  <div class="form-group">
+                    <label for="new_dish_price">单价（若称重菜 则单位为元/斤）*</label>
+                    <input type="number" class="form-control" id="new_dish_price" placeholder="单价">
+                  </div>
+                  <div class="form-group">
+                    <label for="new_dish_img">图片</label>
+                    <input type="file" id="new_dish_img">
+                  </div>
+                  <div class="form-group">
+                    <label for="new_dish_img1">图片</label>
+                    <input type="file" id="new_dish_img1">
+                  </div>
+                  <div class="form-group">
+                    <label for="new_dish_img2">图片</label>
+                    <input type="file" id="new_dish_img2">
+                  </div>
+                  <select name="" id="new_dish_category">
+                    <option value="1">家常菜</option>
+                    <option value="2">小吃</option>
+                    <option value="3">凉菜</option>
+                  </select>
+                  <button type="submit" class="btn btn-primary btn-lg active" id="new_dish_button" style="transform:scale(0.6,0.6)"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span>提交</button>
+              </div>
+          </div>
+        </div>
+      <script>
+          $("#delete_button").click(function(){
+            var form = new FormData();
+
+            form.append("dish_name", $("#delete_name").val());
+            form.append("dish_id", $("#delete_id").val());
+
+            var settings = {
+              "url": "http://127.0.0.1:8000/trytest/delete_dish/",
+              "method": "POST",
+              "timeout": 0,
+              withCredentials: true,
+               xhrFields: {
+                   withCredentials: true
+               },
+              "processData": false,
+              "mimeType": "multipart/form-data",
+              "contentType": false,
+              "data": form
+            };
+
+            $.ajax(settings).done(function (response) {
+                  console.log(response);
+                  var back = $.parseJSON(response);
+                  if(back.code == -1){
+                    if(back.message == '0 result'){
+                        alert("id错误或名字查不到此菜。");
+                    }
+                    else if(back.message == 'too many result'){
+                        var may_dishes = Object.keys(back.may_dishes);
+                        var err_log_too_many_dishes = '';
+                        for(var may_dishes_index = 0; may_dishes_index < may_dishes.length; may_dishes_index++){
+                            err_log_too_many_dishes += ('  '+may_dishes[may_dishes_index]);
+                        }
+                        alert('有多于一个可能的菜品:' + err_log_too_many_dishes + '，请输入更详细的名字');
+                    }
+                  }
+                  else{
+                    alert("删除成功。");
+                    $(location).attr('href', 'http://127.0.0.1:8000/trytest/dish_page/');
+                  }
+            });
+          });
+
+
+          $("#new_dish_button").click(function(){
+            var form = new FormData();
+            form.append("name", $("#new_dish_name").val());
+            form.append("price", $("#new_dish_price").val());
+            form.append("brief", $("#new_dish_brief").val());
+            form.append("imgs",  $("#new_dish_img")[0].files[0]);
+            form.append("imgs",  $("#new_dish_img1")[0].files[0]);
+            form.append("imgs",  $("#new_dish_img2")[0].files[0]);
+            form.append("category", $("#new_dish_category").val());
+
+            var settings = {
+              "url": "http://127.0.0.1:8000/trytest/new_dish/",
+              "method": "POST",
+              "timeout": 0,
+              "processData": false,
+              "mimeType": "multipart/form-data",
+              "contentType": false,
+              "data": form
+            };
+
+            $.ajax(settings).done(function (response) {
+              console.log(response);
+              var back = $.parseJSON(response);
+              if(back.code == -1){
+                if(back.message == 'same name'){
+                    alert("已存在相同名字的菜");
+                }
+                else{
+                    alert('信息错误，请检查输入信息');
+                }
+
+              }
+              else{
+                alert("新增成功。");
+                $(location).attr('href', 'http://127.0.0.1:8000/trytest/dish_page/');
+              }
+            });
+          });
+      </script>
+      {% endblock %}

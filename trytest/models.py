@@ -35,17 +35,35 @@ class Canteen(models.Model):
     Cname = models.CharField(max_length=20)
 
 
+class Category(models.Model):
+    Cname = models.CharField(max_length=20)
+
+
 class Dishes(models.Model):
     DishName = models.CharField(max_length=10)
     DishBrief = models.CharField(max_length=200, null=True)
     DishScore = models.IntegerField(null=True)
     DishPrice = models.FloatField(max_length=5)
     DishSell = models.IntegerField(default=0, null=True)
+    DishCategoryId = models.ForeignKey(Category, on_delete=models.CASCADE, default=1)
+
+
+def load_worker_photo(instance, filename):
+    return '/'.join([MEDIA_ROOT, "worker_photo", instance.id.__str__(), time.strftime('%Y%m%d%H%M%S')
+                     + random.randint(1000000, 9999999).__str__() + file_type(filename)])
+
+
+class Worker(models.Model):
+    WorkerName = models.CharField(max_length=10)
+    WorkerPosition = models.CharField(max_length=10)
+    PhoneNumber = models.FloatField(max_length=20)
+    Password = models.CharField(max_length=20)
+    Photo = models.ImageField(null=True, upload_to=load_worker_photo)
 
 
 def load_dishes_image(instance, filename):
-    return '/'.join([MEDIA_ROOT, "dish_image", instance.id, time.strftime('%Y%m%d%H%M%S')
-                     + random.randint(1000000, 9999999).__str__()])
+    return '/'.join([MEDIA_ROOT, "dish_image", instance.Dishes_id.__str__(), time.strftime('%Y%m%d%H%M%S')
+                     + random.randint(1000000, 9999999).__str__() + file_type(filename)])
 
 
 class DishesImage(models.Model):
@@ -54,8 +72,8 @@ class DishesImage(models.Model):
 
 
 def load_user_image(instance, filename):
-    return '/'.join([MEDIA_ROOT, "user_image", instance.id, time.strftime('%Y%m%d%H%M%S')
-                     + random.randint(1000000, 9999999).__str__()])
+    return '/'.join([MEDIA_ROOT, "user_image", instance.id.__str__(), time.strftime('%Y%m%d%H%M%S')
+                     + random.randint(1000000, 9999999).__str__() + file_type(filename)])
 
 
 class User(models.Model):
@@ -104,14 +122,15 @@ class Trade(models.Model):
     Cost = models.FloatField(max_length=5)
 
 
-class TradeComment(models.Model):
-    Trade = models.ForeignKey(Trade, on_delete=models.CASCADE)
-    Content = models.CharField(max_length=200)
-    Reply = models.CharField(max_length=200, null=True)
-
-
 class TradeDish(models.Model):
     Dishes = models.ForeignKey(Dishes, on_delete=models.CASCADE, null=True)
     Trade = models.ForeignKey(Trade, on_delete=models.CASCADE, null=True)
     CommentScore = models.IntegerField(null=True)
+    CommentNum = models.IntegerField(default=0)
+
+
+class TradeComment(models.Model):
+    TradeDish = models.ForeignKey(TradeDish, on_delete=models.CASCADE, default=1)
+    Content = models.CharField(max_length=200)
+    Reply = models.CharField(max_length=200, null=True)
 
