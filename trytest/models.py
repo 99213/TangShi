@@ -46,6 +46,7 @@ class Dishes(models.Model):
     DishPrice = models.FloatField(max_length=5)
     DishSell = models.IntegerField(default=0, null=True)
     DishCategoryId = models.ForeignKey(Category, on_delete=models.CASCADE, default=1)
+    ScoreNum = models.IntegerField(default=0)
 
 
 def load_worker_photo(instance, filename):
@@ -117,8 +118,8 @@ class Trade(models.Model):
     User = models.ForeignKey(User, on_delete=models.CASCADE)
     Code = models.CharField(max_length=50)
     TStatus = models.CharField(max_length=10)
-    OrderTime = models.TimeField(auto_now_add=True)
-    CloseTime = models.TimeField(null=True,)
+    OrderTime = models.DateTimeField(auto_now_add=True)
+    CloseTime = models.DateTimeField(null=True,)
     Cost = models.FloatField(max_length=5)
 
 
@@ -126,11 +127,11 @@ class TradeDish(models.Model):
     Dishes = models.ForeignKey(Dishes, on_delete=models.CASCADE, null=True)
     Trade = models.ForeignKey(Trade, on_delete=models.CASCADE, null=True)
     CommentScore = models.IntegerField(null=True)
-    CommentNum = models.IntegerField(default=0)
 
 
 class TradeComment(models.Model):
     TradeDish = models.ForeignKey(TradeDish, on_delete=models.CASCADE, default=1)
     Content = models.CharField(max_length=200)
-    Reply = models.CharField(max_length=200, null=True)
-
+    ReplyTime = models.DateTimeField(auto_now_add=True, null=True)
+    ReplyId = models.IntegerField(null=True)
+    WorkerId = models.ForeignKey(Worker, on_delete=models.CASCADE, null=True)

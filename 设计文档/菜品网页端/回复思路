@@ -1,0 +1,22 @@
+内部：
+    画个小框
+    获得一道菜的完整的dish_id:[TradeDish_id]
+
+    对每个TradeDish_id:
+        找到id下所有的tradecomment
+        从reply=null开始，找出所有回复它的，放在它后行，行首加一个空格，然后对每一条递归调用本条
+
+dishid_tradedishid[dish_id]=tradedishid
+dishes_id[dish_id] = dish_name
+tradedishid_commentid_commentcontent[tradedish['id']][comment_id] = comment_content
+
+
+回复排序：第一个tc_id,放在首位后面，之后每一个tcid，查询replyid并放在其子节点下并缩进一段距离
+
+外部：
+    画个大框
+    获得所有菜id及菜名
+    获得关闭时间在七日内且为‘已完成’的所有tradeid
+    根据得到的tradeid获取所有相应的tradedish完整数据
+    获得相应tradedish_id下所有的tradecomment完整信息
+    对每道菜调用内部方法

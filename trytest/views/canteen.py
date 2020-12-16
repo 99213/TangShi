@@ -8,6 +8,7 @@ from tangshi.settings import *
 from trytest.views.order import head_path
 from trytest.views.order import name_search_dish_server, id_get_dish_dic
 import json
+import datetime
 
 
 def worker_index(request):
@@ -133,13 +134,13 @@ def new_dish(request):
         Dishes.objects.get(DishName=name)
         return JsonResponse({'code': -1, 'message': 'same name'})
     except:
-        a=1
+        a = 1
     brief = data_get.get('brief')
     price = data_get.get('price')
     category = data_get.get('category')
     try:
         handle_dish = Dishes(DishName=name, DishBrief=brief, DishScore=10, DishPrice=price, DishSell=0,
-                         DishCategoryId_id=category)
+                             DishCategoryId_id=category)
         for img in request.FILES.getlist('new_imgs'):
             handle_img = DishesImage(DishPic=img, Dishes_id=handle_dish.id)
             try:
@@ -173,7 +174,7 @@ def delete_dish(request):
             for key in names:
                 dish_id = name_id[key]['dish_id']
             Dishes.objects.get(id=dish_id).delete()
-            return JsonResponse({'code': 0, 'message': '成功删除'+names[0]})
+            return JsonResponse({'code': 0, 'message': '成功删除' + names[0]})
     else:
         try:
             handle_dish = Dishes.objects.get(id=dish_id)
@@ -182,3 +183,90 @@ def delete_dish(request):
             return JsonResponse({'code': 0, 'message': '成功删除' + name})
         except:
             return JsonResponse({'code': -1, 'message': 'id错误'})
+
+
+def comment_reply(request):
+    dishes = Dishes.objects.filter()
+    dishes_id = {}
+    for dish in dishes:
+        dishes_id[dish.id] = dish.DishName
+
+    recent_trades = Trade.objects.filter(CloseTime__gt=(datetime.datetime.now() - datetime.timedelta(days=7)),
+                                         TStatus='已完成')
+    trades_id = {}
+    tradesDish = []
+    dish_comment = {}
+    dishid_tradedishid = {}
+    tradedishid_commentid_commentcontent = {}
+    for trade in recent_trades:
+        trades_id[trade.id] = trade.User_id
+        tradedishList = TradeDish.objects.filter(Trade_id=trade.id)
+        for each_dish in tradedishList:
+            tradesDish.append({'id': each_dish.id, 'CommentScore': each_dish.CommentScore,
+                               'Dishes_id': each_dish.Dishes_id, 'Trade_id': each_dish.Trade_id})
+    for each_s_dish in tradesDish:
+        all_comments = TradeComment.objects.filter(TradeDish_id=each_s_dish['id'])
+        if not dishid_tradedishid.__contains__(each_s_dish['Dishes_id']):
+            dishid_tradedishid[each_s_dish['Dishes_id']] = []
+        dishid_tradedishid[each_s_dish['Dishes_id']].append(each_s_dish['id'])
+        tradedishid_commentid_commentcontent[each_s_dish['id']] = {}
+        for each_Comment in all_comments:
+            tradedishid_commentid_commentcontent[each_s_dish['id']][each_Comment.id] = \
+                {'Content': each_Comment.Content, 'TradeDish_id': each_Comment.TradeDish_id,
+                 'ReplyId': each_Comment.ReplyId, 'WorkerId_id': each_Comment.WorkerId_id}
+    return render(request, "eater.html", {"dishid_tradedishid": dishid_tradedishid, "dishes_id": dishes_id,
+                                          "tradedishid_commentid_commentcontent": tradedishid_commentid_commentcontent})
+
+
+def get_comment(request):
+    dishes = Dishes.objects.filter()
+    dishes_id = {}
+    for dish in dishes:
+        dishes_id[dish.id] = dish.DishName
+
+    recent_trades = Trade.objects.filter(CloseTime__gt=(datetime.datetime.now() - datetime.timedelta(days=7)),
+                                         TStatus='已完成')
+    trades_id = {}
+    tradesDish = []
+    dish_comment = {}
+    dishid_tradedishid = {}
+    tradedishid_commentid_commentcontent = {}
+    for trade in recent_trades:
+        trades_id[trade.id] = trade.User_id
+        tradedishList = TradeDish.objects.filter(Trade_id=trade.id)
+        for each_dish in tradedishList:
+            tradesDish.append({'id': each_dish.id, 'CommentScore': each_dish.CommentScore,
+                               'Dishes_id': each_dish.Dishes_id, 'Trade_id': each_dish.Trade_id})
+    for each_s_dish in tradesDish:
+        all_comments = TradeComment.objects.filter(TradeDish_id=each_s_dish['id'])
+        if not dishid_tradedishid.__contains__(each_s_dish['Dishes_id']):
+            dishid_tradedishid[each_s_dish['Dishes_id']] = []
+        dishid_tradedishid[each_s_dish['Dishes_id']].append(each_s_dish['id'])
+        tradedishid_commentid_commentcontent[each_s_dish['id']] = {}
+        for each_Comment in all_comments:
+            tradedishid_commentid_commentcontent[each_s_dish['id']][each_Comment.id] = \
+                {'Content': each_Comment.Content, 'TradeDish_id': each_Comment.TradeDish_id,
+                 'ReplyId': each_Comment.ReplyId, 'WorkerId_id': each_Comment.WorkerId_id,
+                 "ReplyTime": each_Comment.ReplyTime, 'DishScore': each_s_dish['CommentScore']}
+    for tdish_id,comments in tradedishid_commentid_commentcontent.items():
+        for cid,cconcent in comments.items():
+            temp = cconcent['ReplyId']
+            i = '&nbsp&nbsp'
+            if cconcent['WorkerId_id'] is not None:
+                tradedishid_commentid_commentcontent[tdish_id][cid]['WorkerPosition'] = Worker.objects.get(id=each_Comment.WorkerId_id).WorkerPosition
+                tradedishid_commentid_commentcontent[tdish_id][cid]['WorkerName'] = Worker.objects.get(id=each_Comment.WorkerId_id).WorkerName
+                tradedishid_commentid_commentcontent[tdish_id][cid]["UserName"] = None
+            else:
+                tradedishid_commentid_commentcontent[tdish_id][cid]['WorkerPosition'] = None
+                tradedishid_commentid_commentcontent[tdish_id][cid]['WorkerName'] = None
+                tdid = tradedishid_commentid_commentcontent[tdish_id][cid]['TradeDish_id']
+                tid = TradeDish.objects.get(id=tdid).Trade_id
+                uid = Trade.objects.get(id=tid).User_id
+                uname = User.objects.get(id=uid).UserName
+                tradedishid_commentid_commentcontent[tdish_id][cid]["UserName"] = uname
+            while comments.__contains__(temp):
+                i += '&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp'
+                temp = comments[temp]['ReplyId']
+            tradedishid_commentid_commentcontent[tdish_id][cid]['level'] = i
+    return JsonResponse({"dishid_tradedishid": dishid_tradedishid, "dishes_id": dishes_id,
+                         "tradedishid_commentid_commentcontent": tradedishid_commentid_commentcontent})

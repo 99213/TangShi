@@ -37,4 +37,6 @@ urlpatterns = [
     path(r'dish_modify/', views.canteen.dish_modify, name='dish_modify'),
     path(r'new_dish/', views.canteen.new_dish, name='new_dish'),
     path(r'delete_dish/', views.canteen.delete_dish, name='delete_dish'),
+    path(r'comment_reply/', views.canteen.comment_reply, name='comment_reply'),
+    path(r'get_comment/', views.canteen.get_comment, name='get_comment'),
 ]

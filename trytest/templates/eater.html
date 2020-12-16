@@ -1,0 +1,84 @@
+      {% extends "nav.html" %}
+
+      {% block content %}
+        <script>
+            $("body").css("background-image","url('/media/background/light_spring.jpg')");
+        </script>
+        <div class="row">
+          <div class="col-md-4"></div>
+          <div class="col-md-4">
+              <p>菜品回复</p>
+              {% for each_dishid, dish_name in dishes_id.items %}
+              <br><br><br>
+              <p>{{dish_name}}评论<p>
+              <div id="dish{{each_dishid}}">
+              </div>
+              {% endfor %}
+          </div>
+          <div class="col-md-4"></div>
+        </div>
+      <script>
+        var form = new FormData();
+        var settings = {
+          "url": "http://127.0.0.1:8000/trytest/get_comment/",
+          "method": "POST",
+          "timeout": 0,
+          "processData": false,
+          "mimeType": "multipart/form-data",
+          "contentType": false,
+          "data": form
+        };
+
+        $.ajax(settings).done(function (response) {
+          console.log(response);
+          var back = $.parseJSON(response);
+          var dishid_tradedishid = back["dishid_tradedishid"]
+          var tradedishid_commentid_commentcontent = back["tradedishid_commentid_commentcontent"]
+          for(var dish_key in dishid_tradedishid){
+            var handle_dish = $("#dish"+String(dish_key));
+            for(var tradedish_index in dishid_tradedishid[dish_key]){
+                var each_tradedishid = dishid_tradedishid[dish_key][tradedish_index];
+                var hande_tradedish = $("<div id='tradedish"+String(each_tradedishid)+"'></div>").text("");
+                handle_dish.append(hande_tradedish)
+                var handle_comments = tradedishid_commentid_commentcontent[String(each_tradedishid)]
+                if(JSON.stringify(handle_comments) != "{}"){
+                    var i = 0;
+                    for(var each_comment_key in handle_comments){
+                        var temp = handle_comments[each_comment_key];
+                        if(i==0){
+                            i += 1;
+                            var start_comment = $("<div style='position:relative' id='comment"+each_comment_key+"'></div>").text("");
+                            var start_content = $("<div></div>").html(temp.level+temp.Content);
+                            var start_score = $("<div></div>").html("本单评分：" + String(handle_comments[each_comment_key].DishScore));
+                            var start_message = $("<div></div>").html(temp.level+"本单评价：");
+                            start_comment.append(start_score);
+                            start_comment.append(start_content);
+                            hande_tradedish.append(start_comment);
+                            continue;
+                            }
+                        var fatherId = handle_comments[each_comment_key].ReplyId
+                        if(fatherId==null){}
+                        else{
+                            var temp_father = $("#comment"+String(fatherId))
+                            var handle_content = temp.level+temp.Content
+                            if(temp['WorkerId_id'] != null){
+                                var handle_comment =  $("<div style='position:relative' id='comment"+each_comment_key+"'></div>").html(handle_content+"&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp" + "~来自"+String(temp['WorkerPosition'])+String(temp['WorkerName']));
+                                var ctime = $("<div style='position:relative'></div>").html(temp.level+String(temp['ReplyTime']));
+                                temp_father.append(ctime)
+                                temp_father.append(handle_comment)
+                            }
+                            else
+                            {
+                                var handle_comment =  $("<div style='position:relative' id='comment"+each_comment_key+"'></div>").html(handle_content+"&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp" + "~来自"+temp['UserName']);
+                                var ctime = $("<div style='position:relative'></div>").html(temp.level+String(temp['ReplyTime']));
+                                temp_father.append(ctime)
+                                temp_father.append(handle_comment)
+                            }
+                        }
+                    }
+                }
+            }
+          }
+        });
+      </script>
+      {% endblock %}
