@@ -5,6 +5,7 @@ import time
 from tangshi.settings import *
 import json
 import trytest.tools
+from django.utils import timezone
 
 
 head_path = 'http://127.0.0.1:8000' + MEDIA_URL
@@ -48,7 +49,7 @@ def pay(request):
     user_id = request.session["user_id"]
 
     if request.method == "POST":
-        data_get = json.loads(request.body)
+        data_get = request.POST
     else:
         data_get = request.GET
 
@@ -69,7 +70,7 @@ def get_order_status(request):
     user_id = request.session["user_id"]
 
     if request.method == "POST":
-        data_get = json.loads(request.body)
+        data_get = request.POST
     else:
         data_get = request.GET
     trade_id = int(data_get.get("trade_id"))
@@ -79,19 +80,19 @@ def get_order_status(request):
         return JsonResponse({"status": 0, "msg": "not your order"})
 
     t_status = handle_trade.TStatus
-    JsonResponse({"status": 1, "TStatus": t_status})
+    return JsonResponse({"status": 1, "TStatus": t_status})
 
 
 def canteen_get_money(request):
     if request.method == "POST":
-        data_get = json.loads(request.body)
+        data_get = request.POST
     else:
         data_get = request.GET
     trade_id = int(data_get.get("trade_id"))
     handle_trade = Trade.objects.get(pk=trade_id)
     handle_trade.TStatus = "已付款"
     handle_trade.save()
-    JsonResponse({"status": 1, "TStatus": "待付款->已付款"})
+    return JsonResponse({"status": 1, "TStatus": "待付款->已付款"})
 
 
 def trade_comment(request):
@@ -100,7 +101,7 @@ def trade_comment(request):
     user_id = request.session["user_id"]
 
     if request.method == "POST":
-        data_get = json.loads(request.body)
+        data_get = request.POST
     else:
         data_get = request.GET
     trade_id = int(data_get.get("trade_id"))
@@ -139,7 +140,7 @@ def undo_order(request):
     elif TStatus == "已付款":
         refund(trade_id)
     this_trade.TStatus = "已取消"
-    this_trade.CloseTime = time.strftime('%Y/%m/%d-%H:%M:%S')
+    this_trade.CloseTime = timezone.now()
     this_trade.save()
     return JsonResponse({"status": 1, "msg": "取消成功，若您已付款，退款将很快返回您的付款账户"})
 

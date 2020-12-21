@@ -141,13 +141,13 @@ def new_dish(request):
     try:
         handle_dish = Dishes(DishName=name, DishBrief=brief, DishScore=10, DishPrice=price, DishSell=0,
                              DishCategoryId_id=category)
-        for img in request.FILES.getlist('new_imgs'):
+        handle_dish.save()
+        for img in request.FILES.getlist('imgs'):
             handle_img = DishesImage(DishPic=img, Dishes_id=handle_dish.id)
             try:
                 handle_img.save()
             except Exception as e:
                 print(e)
-        handle_dish.save()
         return JsonResponse({'code': 0, 'message': '新增菜品成功'})
     except Exception as e:
         print(e)
